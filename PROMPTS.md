@@ -28,3 +28,19 @@ Can you pelase adjust efficiency.ts so that it writes the results to a json file
 
 5. 
 can you please add a typecheck command
+
+6.
+Can you please make the id generator object configurable, so that it accepts the following arguments?
+
+{
+	delimeter: string, // delimeter between tokens
+	filter: (string) => boolean, // overrides filter individual tokens
+	count: number, // how many tokens per id
+	allow: {
+		unicode: boolean, (non-ascii)
+		whitespace: boolean,
+		punctuation: boolean (non-A-Za-z0-9 ascii)
+		numbers: boolean, (0-9)
+		uppercase: boolean,
+	}
+}

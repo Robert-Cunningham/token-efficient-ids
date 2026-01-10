@@ -1,5 +1,6 @@
 import { webcrypto as crypto } from 'node:crypto';
 import { loadTokens, type ModelId } from './tokenizers.js';
+import { createAllowFilter, type AllowOptions } from './filter.js';
 
 // Pool-based random generation (like nanoid) to minimize crypto syscalls
 const POOL_SIZE_MULTIPLIER = 128;
@@ -56,6 +57,14 @@ export interface GeneratorOptions {
   size?: number;
   /** Custom random byte generator */
   random?: (bytes: number) => Uint8Array;
+  /** Delimiter between tokens (default: '') */
+  delimiter?: string;
+  /** Custom filter function for tokens (overrides allow settings) */
+  filter?: (token: string) => boolean;
+  /** Number of tokens per ID (alias for size) */
+  count?: number;
+  /** Token filtering options */
+  allow?: AllowOptions;
 }
 
 /**
@@ -72,10 +81,27 @@ export interface GeneratorOptions {
  */
 export function customRandom(options: GeneratorOptions = {}) {
   const model = options.model ?? 'gpt-4o';
-  const defaultSize = options.size ?? 4;
+  const defaultSize = options.count ?? options.size ?? 4;
   const getRandom = options.random ?? random;
+  const delimiter = options.delimiter ?? '';
 
-  const tokens = loadTokens(model);
+  // Build token filter
+  let tokenFilter: ((token: string) => boolean) | undefined;
+  if (options.filter) {
+    tokenFilter = options.filter;
+  } else if (options.allow) {
+    tokenFilter = createAllowFilter(options.allow);
+  }
+
+  // Load and optionally filter tokens
+  let tokens = loadTokens(model);
+  if (tokenFilter) {
+    tokens = tokens.filter(tokenFilter);
+    if (tokens.length === 0) {
+      throw new Error('No tokens remaining after applying filter');
+    }
+  }
+
   const bitsPerToken = Math.ceil(Math.log2(tokens.length));
   const bytesPerToken = Math.ceil(bitsPerToken / 8);
   const mask = (1 << bitsPerToken) - 1;
@@ -84,7 +110,7 @@ export function customRandom(options: GeneratorOptions = {}) {
   const step = Math.ceil((1.6 * bytesPerToken * defaultSize) / 0.8);
 
   return (size = defaultSize): string => {
-    let id = '';
+    const parts: string[] = [];
     let selected = 0;
 
     while (selected < size) {
@@ -96,13 +122,13 @@ export function customRandom(options: GeneratorOptions = {}) {
         offset += bytesPerToken;
 
         if (token !== null) {
-          id += token;
+          parts.push(token);
           selected++;
         }
       }
     }
 
-    return id;
+    return parts.join(delimiter);
   };
 }
 

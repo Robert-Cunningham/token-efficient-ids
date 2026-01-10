@@ -3,4 +3,5 @@
 
 export { tokenId, customTokenId, customRandom, random } from './generator.js';
 export type { GeneratorOptions } from './generator.js';
+export type { AllowOptions } from './filter.js';
 export { MODELS, type ModelId } from './tokenizers.js';
