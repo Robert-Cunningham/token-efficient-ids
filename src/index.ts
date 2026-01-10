@@ -1,7 +1,6 @@
 // Token-Efficient IDs
-// This is the public API entry point
+// Generate IDs optimized for LLM token efficiency
 
-// Internal utilities are in tokenizers.ts
-// They are not exported here as they are meant for internal use only
-
-// Future: ID generation functions will be exported here
+export { tokenId, customTokenId, customRandom, random } from './generator.js';
+export type { GeneratorOptions } from './generator.js';
+export { MODELS, type ModelId } from './tokenizers.js';

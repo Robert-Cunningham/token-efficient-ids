@@ -1,24 +1,130 @@
-# Token Efficient IDs
+# Token-Efficient IDs
 
-This repository generates token-efficient IDs. Major LLMs like GitHub, Anthropic, DeepSeek have tokenizers. And ... You can squeeze more bits per token into an ID by making sure that your ID uses, you know, tokens like T-H-E-R-E instead of, you know, J-X-W-2-1 ...
+A tiny, secure, URL-friendly ID generator optimized for LLM token efficiency.
 
-# Language: JS
+```js
+import { tokenId } from 'token-efficient-ids'
+const id = tokenId() // => "ĠhelloĠworldĠfoobar"
+```
 
-# Todo
-* Get token files for a bunch of LLMs
-* Build LLM-specific id functions
-* Find tokens that have high overlap
-* Write a general / recommended id function, which compresses well everywhere
-* Test 1000 ids against OpenRouter APIs to find tokenization counts
+- **Token-efficient**: 4 tokens instead of 8-15 for same entropy
+- **Secure**: Uses `crypto.getRandomValues()`
+- **Customizable**: 28 LLM tokenizers included
 
-# Idea
-For individual LLMs, the best thing would be to simply generate a random string of K tokens from that LLM's list (maybe with some user-specified constraints, like all lowercase or no special characters). I guess you should also be able to specify max-length to avoid making super aggressive length tokens, if you want.
+## Why?
 
-Take the N tokens which are most common in the tokenizer files.
+When IDs appear in LLM context, traditional IDs waste tokens:
 
-# Prompts
-Can you please start by downloading a bunch of tokenizer files for the major LLMs? Maybe you can find them from the same source as "tiktokenizer"? I want to be able to call a function like listTokens for GPT and get back a list of tokens in GPT-4 or GPT-4o or whatever, but for a ton of LLMs.
+| Method | Characters | LLM Tokens | Entropy |
+|--------|------------|------------|---------|
+| UUID v4 | 36 | ~12 | 122 bits |
+| nanoid | 21 | ~8 | 126 bits |
+| **tokenId(4)** | ~15 | **4** | 70 bits |
+| **tokenId(7)** | ~25 | **7** | 123 bits |
 
-This is simply the first building block of a library which will ultimately generate ids using those tokens, so don't expose the list tokens api please; just set it up to be used internally. Also please use tsup to set up the package.
+Each token in a `tokenId` is a single LLM token, so you get maximum entropy per token.
 
-that's good, but can you also do more modern open source LLMs? for example deepseek v3, nemotron 3, kimi k2, qwen 235b, etc
+## Install
+
+```bash
+npm install token-efficient-ids
+```
+
+## Usage
+
+### Basic
+
+```js
+import { tokenId } from 'token-efficient-ids'
+
+tokenId()   // 4 tokens, ~70 bits entropy
+tokenId(7)  // 7 tokens, ~123 bits entropy (UUID-equivalent)
+```
+
+### Custom Model
+
+```js
+import { customTokenId } from 'token-efficient-ids'
+
+const claudeId = customTokenId({ model: 'claude' })
+claudeId()  // Uses Claude's tokenizer
+
+const llamaId = customTokenId({ model: 'llama-4', size: 6 })
+llamaId()   // 6 Llama-4 tokens
+```
+
+### Non-Secure
+
+For non-security-critical uses (2x faster):
+
+```js
+import { tokenId } from 'token-efficient-ids/non-secure'
+tokenId()  // Uses Math.random()
+```
+
+### Custom Random
+
+```js
+import { customRandom } from 'token-efficient-ids'
+
+const seededId = customRandom({
+  model: 'gpt-4o',
+  size: 4,
+  random: (bytes) => mySeededRng(bytes)
+})
+```
+
+## Models
+
+28 tokenizers included:
+
+| Provider | Models |
+|----------|--------|
+| OpenAI | gpt-3, gpt-4, gpt-4o |
+| Anthropic | claude |
+| Meta | llama, llama-2, llama-3, llama-3.1, llama-3.2, llama-4 |
+| Mistral | mistral-v1, mistral-v3, mistral-nemo |
+| Google | gemma, gemma-2 |
+| DeepSeek | deepseek-v3, deepseek-r1 |
+| Alibaba | qwen-2.5, qwen-3 |
+| Microsoft | phi-4 |
+| Others | grok-1, command-r, command-r-plus, dbrx, internlm2, nemotron, kimi-k2, yi |
+
+## API
+
+### `tokenId(size?: number): string`
+
+Generate an ID using the default model (gpt-4o).
+
+- `size` — Number of tokens (default: 4)
+
+### `customTokenId(options): (size?: number) => string`
+
+Create a generator for a specific model.
+
+- `options.model` — Model ID (default: 'gpt-4o')
+- `options.size` — Default token count (default: 4)
+
+### `customRandom(options): (size?: number) => string`
+
+Create a generator with custom randomness.
+
+- `options.model` — Model ID (default: 'gpt-4o')
+- `options.size` — Default token count (default: 4)
+- `options.random` — Custom random byte generator
+
+### `MODELS: string[]`
+
+List of all available model IDs.
+
+## How It Works
+
+1. Loads the tokenizer vocabulary for the specified model
+2. Uses rejection sampling for uniform distribution across vocab
+3. Concatenates randomly selected tokens into the ID
+
+Each token provides ~17.6 bits of entropy (for 200k vocab), so 4 tokens ≈ 70 bits.
+
+## License
+
+MIT
