@@ -25,7 +25,8 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "download": "bash scripts/download-tokenizers.sh"
+    "download": "bash scripts/download-tokenizers.sh",
+    "benchmark": "tsx benchmark.ts"
   },
   "keywords": [
     "tokens",
@@ -38,6 +39,8 @@
   "packageManager": "pnpm@10.23.0",
   "devDependencies": {
     "@types/node": "^25.0.6",
+    "nanoid": "^5.1.6",
+    "tinybench": "^6.0.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3"
   }
