@@ -5,6 +5,48 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// GPT-2 bytes_to_unicode reverse mapping
+// Maps Unicode code points back to original bytes
+function buildUnicodeToBytes(): Map<number, number> {
+  const map = new Map<number, number>();
+
+  // Bytes that map to themselves (printable ranges)
+  // 33-126 (! to ~), 161-172 (¡ to ¬), 174-255 (® to ÿ)
+  for (let b = 33; b <= 126; b++) map.set(b, b);
+  for (let b = 161; b <= 172; b++) map.set(b, b);
+  for (let b = 174; b <= 255; b++) map.set(b, b);
+
+  // Bytes that get remapped to 256+ range
+  // Order: 0-32, 127-160, 173
+  let n = 0;
+  for (let b = 0; b <= 32; b++) map.set(256 + n++, b);
+  for (let b = 127; b <= 160; b++) map.set(256 + n++, b);
+  map.set(256 + n, 173);
+
+  return map;
+}
+
+const UNICODE_TO_BYTES = buildUnicodeToBytes();
+
+/**
+ * Decode a BPE token from GPT-2 byte encoding to actual string
+ */
+function decodeToken(token: string): string {
+  const bytes: number[] = [];
+  for (const char of token) {
+    const codePoint = char.codePointAt(0)!;
+    const byte = UNICODE_TO_BYTES.get(codePoint);
+    if (byte !== undefined) {
+      bytes.push(byte);
+    } else {
+      // Character not in mapping - encode as UTF-8
+      const encoded = new TextEncoder().encode(char);
+      bytes.push(...encoded);
+    }
+  }
+  return new TextDecoder().decode(new Uint8Array(bytes));
+}
+
 // All supported model IDs
 export const MODELS = [
   // OpenAI
@@ -110,11 +152,11 @@ export function loadTokens(model: ModelId): string[] {
     (data.added_tokens || []).filter((t) => t.special).map((t) => t.content)
   );
 
-  // Convert to array, filter special tokens, sort by ID
+  // Convert to array, filter special tokens, sort by ID, decode BPE encoding
   const tokens = Object.entries(vocab)
     .filter(([token]) => !specialTokens.has(token))
     .sort((a, b) => a[1] - b[1])
-    .map(([token]) => token);
+    .map(([token]) => decodeToken(token));
 
   // Cache the result
   tokenizerCache.set(model, tokens);
