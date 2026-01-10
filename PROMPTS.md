@@ -23,3 +23,8 @@ Great. Can you please write a file called efficieny.ts, which uses the openroute
 Please set max_tokens in the response to zero or one; I don't want to spend a lot of money on this.
 
 https://openrouter.ai/docs/guides/guides/usage-accounting
+
+Can you pelase adjust efficiency.ts so that it writes the results to a json file, and runs the tests in parallel?
+
+5. 
+can you please add a typecheck command

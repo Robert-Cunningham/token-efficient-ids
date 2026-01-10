@@ -1,6 +1,7 @@
 #!/usr/bin/env npx tsx
 
 import crypto from 'node:crypto';
+import fs from 'node:fs';
 
 import { customTokenId, tokenId } from './src/generator.js';
 
@@ -98,32 +99,48 @@ type Results = Record<string, Record<string, Metrics>>;
 async function runBenchmark(): Promise<Results> {
   const results: Results = {};
 
+  // Initialize results structure
   for (const model of OPENROUTER_MODELS) {
-    console.error(`Testing model: ${model}`);
     results[model] = {};
+  }
 
-    // Measure baseline (single char to get overhead)
-    const baselineTokens = await measureTokens('.', model);
-    console.error(`  Baseline tokens: ${baselineTokens}`);
+  // Pre-generate all IDs and content
+  const idData = ID_SOURCES.map((source) => {
+    const ids = generateIds(source.generator, ID_COUNT);
+    const content = ids.join('\n');
+    return {
+      source,
+      content,
+      totalBytes: content.length,
+    };
+  });
 
-    for (const source of ID_SOURCES) {
-      console.error(`  Measuring: ${source.name}`);
+  // Build all test tasks
+  const tasks = OPENROUTER_MODELS.flatMap((model) =>
+    idData.map((data) => ({ model, ...data }))
+  );
 
-      // Generate IDs
-      const ids = generateIds(source.generator, ID_COUNT);
-      const content = ids.join('\n');
-      const totalBytes = content.length;
-
-      // Measure tokens
-      const totalTokens = await measureTokens(content, model);
-      const idsTokens = totalTokens - baselineTokens;
-
-      results[model][source.name] = {
-        entropyBits: source.entropyBits,
-        avgTokensPerID: idsTokens / ID_COUNT,
-        avgBytesPerID: totalBytes / ID_COUNT,
+  // Run all measurements in parallel
+  console.error(`Running ${tasks.length} measurements in parallel...`);
+  const measurements = await Promise.all(
+    tasks.map(async ({ model, source, content, totalBytes }) => {
+      const idsTokens = await measureTokens(content, model);
+      console.error(`  ${model} / ${source.name}: ${idsTokens / ID_COUNT} tokens/ID`);
+      return {
+        model,
+        sourceName: source.name,
+        metrics: {
+          entropyBits: source.entropyBits,
+          avgTokensPerID: idsTokens / ID_COUNT,
+          avgBytesPerID: totalBytes / ID_COUNT,
+        },
       };
-    }
+    })
+  );
+
+  // Populate results from measurements
+  for (const { model, sourceName, metrics } of measurements) {
+    results[model][sourceName] = metrics;
   }
 
   return results;
@@ -132,7 +149,10 @@ async function runBenchmark(): Promise<Results> {
 // Main
 runBenchmark()
   .then((results) => {
-    console.log(JSON.stringify(results, null, 2));
+    const output = JSON.stringify(results, null, 2);
+    const outputPath = 'efficiency-results.json';
+    fs.writeFileSync(outputPath, output);
+    console.error(`Results written to ${outputPath}`);
   })
   .catch((error) => {
     console.error('Error:', error);
