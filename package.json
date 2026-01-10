@@ -26,7 +26,8 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "download": "bash scripts/download-tokenizers.sh",
-    "benchmark": "tsx benchmark.ts"
+    "benchmark": "tsx benchmark.ts",
+    "efficiency": "tsx --env-file=.env efficiency.ts"
   },
   "keywords": [
     "tokens",
