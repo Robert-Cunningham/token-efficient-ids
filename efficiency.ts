@@ -88,13 +88,46 @@ function generateIds(generator: () => string, count: number): string[] {
   return ids;
 }
 
-interface Metrics {
-  entropyBits: number;
+export interface Metrics {
   avgTokensPerID: number;
   avgBytesPerID: number;
+  avgCharsPerID: number;
 }
 
-type Results = Record<string, Record<string, Metrics>>;
+/**
+ * Measure token efficiency for an ID generator against a specific model.
+ *
+ * @param model - OpenRouter model identifier (e.g., 'openai/gpt-4o')
+ * @param idCount - Number of IDs to generate for measurement
+ * @param generator - Function that generates a single ID
+ * @returns Metrics with average tokens and bytes per ID
+ */
+const textEncoder = new TextEncoder();
+
+export async function measureEfficiency(
+  model: string,
+  idCount: number,
+  generator: () => string
+): Promise<Metrics> {
+  const ids = generateIds(generator, idCount);
+  const content = ids.join('\n');
+  const totalBytes = textEncoder.encode(content).length;
+  const totalChars = [...content].length;
+
+  const totalTokens = await measureTokens(content, model);
+
+  return {
+    avgTokensPerID: totalTokens / idCount,
+    avgBytesPerID: totalBytes / idCount,
+    avgCharsPerID: totalChars / idCount,
+  };
+}
+
+interface BenchmarkMetrics extends Metrics {
+  entropyBits: number;
+}
+
+type Results = Record<string, Record<string, BenchmarkMetrics>>;
 
 async function runBenchmark(): Promise<Results> {
   const results: Results = {};
@@ -104,35 +137,23 @@ async function runBenchmark(): Promise<Results> {
     results[model] = {};
   }
 
-  // Pre-generate all IDs and content
-  const idData = ID_SOURCES.map((source) => {
-    const ids = generateIds(source.generator, ID_COUNT);
-    const content = ids.join('\n');
-    return {
-      source,
-      content,
-      totalBytes: content.length,
-    };
-  });
-
   // Build all test tasks
   const tasks = OPENROUTER_MODELS.flatMap((model) =>
-    idData.map((data) => ({ model, ...data }))
+    ID_SOURCES.map((source) => ({ model, source }))
   );
 
   // Run all measurements in parallel
   console.error(`Running ${tasks.length} measurements in parallel...`);
   const measurements = await Promise.all(
-    tasks.map(async ({ model, source, content, totalBytes }) => {
-      const idsTokens = await measureTokens(content, model);
-      console.error(`  ${model} / ${source.name}: ${idsTokens / ID_COUNT} tokens/ID`);
+    tasks.map(async ({ model, source }) => {
+      const metrics = await measureEfficiency(model, ID_COUNT, source.generator);
+      console.error(`  ${model} / ${source.name}: ${metrics.avgTokensPerID} tokens/ID`);
       return {
         model,
         sourceName: source.name,
         metrics: {
+          ...metrics,
           entropyBits: source.entropyBits,
-          avgTokensPerID: idsTokens / ID_COUNT,
-          avgBytesPerID: totalBytes / ID_COUNT,
         },
       };
     })

@@ -44,3 +44,5 @@ Can you please make the id generator object configurable, so that it accepts the
 		uppercase: boolean,
 	}
 }
+
+is there a way to check for all punctuation (also in ascii), not just a few that you named? like some punctuation regex
