@@ -9,6 +9,8 @@ This repository generates token-efficient IDs. Major LLMs like GitHub, Anthropic
 - [x] Build LLM-specific id functions 
 - [ ] write a ~notebook to choose our custom vocabulary (optimize for low-overlap, no spaces if possible, etc)
 - [ ] Find tokens that have high overlap
+- [ ] generally support the notion of vocabularies / while keeping the main package small.
+- [ ] write an entropy estimator
 - [ ] Write a general / recommended id function, which compresses well everywhere
 - [x] Test 1000 ids against OpenRouter APIs to find tokenization counts
 - [ ] write a readme (2/3rds of the work here)

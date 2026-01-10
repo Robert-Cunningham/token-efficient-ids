@@ -46,3 +46,15 @@ Can you please make the id generator object configurable, so that it accepts the
 }
 
 is there a way to check for all punctuation (also in ascii), not just a few that you named? like some punctuation regex
+
+7.
+Can you please write a buildVocabulary function, which accepts a filter, a list of tokenizer vocabularies, and an output vobulary size? It should then basically take the N most common tokens 
+
+, and some result weights, and runs an optimization process? The results to optimize are {entropy per byte}
+
+8.
+is there an efficient way to calculate the entropy of N randomly selected then joined tokens from a BPE encoder vocabulary with K total tokens? I need a way to estimate the true entropy of an id formed by concatenating N tokens from a BPE vocabulary in a tokenizer.json file.
+
+Excellent. Can you please write me a ts function which maps (count: number, tokens: string[]) to an estimate of the entropy of "".join(_.times(count, () => _.sample(tokens)))? And write an excellent docstring that explains the purpose, the math, etc., as necessary.
+
+Can you please mathematically compute the entropy of vocab = [a, aa, aaa, aaaa, aaaaa], count = 7? I will use it to test your work

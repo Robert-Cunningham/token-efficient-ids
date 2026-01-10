@@ -28,7 +28,8 @@
     "download": "bash scripts/download-tokenizers.sh",
     "benchmark": "tsx benchmark.ts",
     "efficiency": "tsx --env-file=.env efficiency.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts"
   },
   "keywords": [
     "tokens",
