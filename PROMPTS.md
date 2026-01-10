@@ -13,3 +13,9 @@ Great, now can you please design an id generator that uses those tokens? Take su
 * it has good distribution properties (i.e. not random % alphabet)
 * there's secure and non-secure support
 * Also write similar (and similarly terse) documentation.
+
+3.
+Great. Now, can you please write a benchmark.ts file (like nanoid's) that benchmarks the performance of generating ids?
+
+4.
+Great. Can you please write a file called efficieny.ts, which uses the openrouter fetch APIs to test how many tokens are used by 1e4 of our ids, nanoid's ids, uuidv4s, etc? Basically I want to create a chart from this which maps config/lib => {entropy per id, average tokens per id, average bytes per id}.
