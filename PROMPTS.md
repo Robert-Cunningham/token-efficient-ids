@@ -19,3 +19,7 @@ Great. Now, can you please write a benchmark.ts file (like nanoid's) that benchm
 
 4.
 Great. Can you please write a file called efficieny.ts, which uses the openrouter fetch APIs to test how many tokens are used by 1e4 of our ids, nanoid's ids, uuidv4s, etc? Basically I want to create a chart from this which maps config/lib => {entropy per id, average tokens per id, average bytes per id}.
+
+Please set max_tokens in the response to zero or one; I don't want to spend a lot of money on this.
+
+https://openrouter.ai/docs/guides/guides/usage-accounting
