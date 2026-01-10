@@ -11,6 +11,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./non-secure": {
+      "types": "./dist/non-secure.d.ts",
+      "import": "./dist/non-secure.js",
+      "require": "./dist/non-secure.cjs"
     }
   },
   "files": [
