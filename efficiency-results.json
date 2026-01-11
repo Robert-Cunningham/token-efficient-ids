@@ -1,134 +1,80 @@
 {
   "openai/gpt-5-nano": {
-    "tokenId()": {
-      "avgTokensPerID": 5.073,
-      "avgBytesPerID": 28.987,
-      "avgCharsPerID": 23.083,
-      "entropyBits": 70
-    },
     "tokenId(7)": {
-      "avgTokensPerID": 8.218,
-      "avgBytesPerID": 50.483,
-      "avgCharsPerID": 39.73,
+      "avgTokensPerID": 8.38,
+      "avgBytesPerID": 41.485,
+      "avgCharsPerID": 31.639,
       "entropyBits": 122
     },
-    "claude tokenId": {
-      "avgTokensPerID": 6.204,
-      "avgBytesPerID": 26.514,
-      "avgCharsPerID": 25.881,
-      "entropyBits": 70
-    },
-    "llama-3 tokenId": {
-      "avgTokensPerID": 5.88,
-      "avgBytesPerID": 26.9,
-      "avgCharsPerID": 23.904,
-      "entropyBits": 70
-    },
     "nanoid()": {
-      "avgTokensPerID": 15.325,
+      "avgTokensPerID": 15.411,
       "avgBytesPerID": 21.999,
       "avgCharsPerID": 21.999,
       "entropyBits": 126
     },
-    "nanoid(10)": {
-      "avgTokensPerID": 7.934,
-      "avgBytesPerID": 10.999,
-      "avgCharsPerID": 10.999,
-      "entropyBits": 60
-    },
     "crypto.randomUUID()": {
-      "avgTokensPerID": 23.875,
+      "avgTokensPerID": 23.886,
       "avgBytesPerID": 36.999,
       "avgCharsPerID": 36.999,
       "entropyBits": 122
+    },
+    "markov(37)": {
+      "avgTokensPerID": 14.341,
+      "avgBytesPerID": 37.999,
+      "avgCharsPerID": 37.999,
+      "entropyBits": 121.65163336087744
     }
   },
   "anthropic/claude-haiku-4.5": {
-    "tokenId()": {
-      "avgTokensPerID": 11.333,
-      "avgBytesPerID": 28.867,
-      "avgCharsPerID": 22.724,
-      "entropyBits": 70
-    },
     "tokenId(7)": {
-      "avgTokensPerID": 18.592,
-      "avgBytesPerID": 49.403,
-      "avgCharsPerID": 39.438,
+      "avgTokensPerID": 17.546,
+      "avgBytesPerID": 41.652,
+      "avgCharsPerID": 31.389,
       "entropyBits": 122
     },
-    "claude tokenId": {
-      "avgTokensPerID": 9.413,
-      "avgBytesPerID": 26.235,
-      "avgCharsPerID": 25.693,
-      "entropyBits": 70
-    },
-    "llama-3 tokenId": {
-      "avgTokensPerID": 10.04,
-      "avgBytesPerID": 27.348,
-      "avgCharsPerID": 24.334,
-      "entropyBits": 70
-    },
     "nanoid()": {
-      "avgTokensPerID": 19.397,
+      "avgTokensPerID": 19.343,
       "avgBytesPerID": 21.999,
       "avgCharsPerID": 21.999,
       "entropyBits": 126
     },
-    "nanoid(10)": {
-      "avgTokensPerID": 9.816,
-      "avgBytesPerID": 10.999,
-      "avgCharsPerID": 10.999,
-      "entropyBits": 60
-    },
     "crypto.randomUUID()": {
-      "avgTokensPerID": 25.096,
+      "avgTokensPerID": 25.079,
       "avgBytesPerID": 36.999,
       "avgCharsPerID": 36.999,
       "entropyBits": 122
+    },
+    "markov(37)": {
+      "avgTokensPerID": 15.965,
+      "avgBytesPerID": 37.999,
+      "avgCharsPerID": 37.999,
+      "entropyBits": 121.65163336087744
     }
   },
   "google/gemini-3-flash-preview": {
-    "tokenId()": {
-      "avgTokensPerID": 6.62,
-      "avgBytesPerID": 29.086,
-      "avgCharsPerID": 22.967,
-      "entropyBits": 70
-    },
     "tokenId(7)": {
-      "avgTokensPerID": 10.896,
-      "avgBytesPerID": 49.834,
-      "avgCharsPerID": 39.717,
+      "avgTokensPerID": 11.312,
+      "avgBytesPerID": 41.54,
+      "avgCharsPerID": 31.48,
       "entropyBits": 122
     },
-    "claude tokenId": {
-      "avgTokensPerID": 6.258,
-      "avgBytesPerID": 26.521,
-      "avgCharsPerID": 26,
-      "entropyBits": 70
-    },
-    "llama-3 tokenId": {
-      "avgTokensPerID": 6.504,
-      "avgBytesPerID": 27.121,
-      "avgCharsPerID": 24.072,
-      "entropyBits": 70
-    },
     "nanoid()": {
-      "avgTokensPerID": 15.913,
+      "avgTokensPerID": 15.884,
       "avgBytesPerID": 21.999,
       "avgCharsPerID": 21.999,
       "entropyBits": 126
     },
-    "nanoid(10)": {
-      "avgTokensPerID": 8.205,
-      "avgBytesPerID": 10.999,
-      "avgCharsPerID": 10.999,
-      "entropyBits": 60
-    },
     "crypto.randomUUID()": {
-      "avgTokensPerID": 33.835,
+      "avgTokensPerID": 33.917,
       "avgBytesPerID": 36.999,
       "avgCharsPerID": 36.999,
       "entropyBits": 122
+    },
+    "markov(37)": {
+      "avgTokensPerID": 14.141,
+      "avgBytesPerID": 37.999,
+      "avgCharsPerID": 37.999,
+      "entropyBits": 121.65163336087744
     }
   }
 }

@@ -1,11 +1,13 @@
 #!/usr/bin/env npx tsx
 
 import crypto from 'node:crypto';
-
+import fs from 'node:fs';
 import { customTokenId, tokenId } from '../src/generator.js';
 
 // For comparison
 import { nanoid } from 'nanoid';
+import { ENTROPY_PER_CHAR, markovId } from '../markov/index.js';
+import { claude, llama4 } from '../src/dictionaries/index.js';
 
 const ID_COUNT = 1_000;
 
@@ -16,8 +18,8 @@ const OPENROUTER_MODELS = [
 ];
 
 // Pre-create custom generators
-const claudeId = customTokenId({ model: 'claude' });
-const llamaId = customTokenId({ model: 'llama-3' });
+const claudeId = customTokenId({ tokens: claude });
+const llamaId = customTokenId({ tokens: llama4 });
 
 interface IDSource {
   name: string;
@@ -26,13 +28,14 @@ interface IDSource {
 }
 
 const ID_SOURCES: IDSource[] = [
-  { name: 'tokenId()', generator: () => tokenId(), entropyBits: 70 },
+  // { name: 'tokenId()', generator: () => tokenId(), entropyBits: 70 },
   { name: 'tokenId(7)', generator: () => tokenId(7), entropyBits: 122 },
-  { name: 'claude tokenId', generator: claudeId, entropyBits: 70 },
-  { name: 'llama-3 tokenId', generator: llamaId, entropyBits: 70 },
+  // { name: 'claude tokenId', generator: claudeId, entropyBits: 70 },
+  // { name: 'llama-3 tokenId', generator: llamaId, entropyBits: 70 },
   { name: 'nanoid()', generator: () => nanoid(), entropyBits: 126 },
-  { name: 'nanoid(10)', generator: () => nanoid(10), entropyBits: 60 },
+  // { name: 'nanoid(10)', generator: () => nanoid(10), entropyBits: 60 },
   { name: 'crypto.randomUUID()', generator: () => crypto.randomUUID(), entropyBits: 122 },
+  { name: 'markov(37)', generator: () => markovId(37), entropyBits: ENTROPY_PER_CHAR * 37 },
 ];
 
 interface TokenUsage {
@@ -166,7 +169,6 @@ async function runBenchmark(): Promise<Results> {
   return results;
 }
 
-/*
 runBenchmark()
   .then((results) => {
     const output = JSON.stringify(results, null, 2);
@@ -178,5 +180,3 @@ runBenchmark()
     console.error('Error:', error);
     process.exit(1);
   });
-}
-*/

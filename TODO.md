@@ -8,8 +8,8 @@ This repository generates token-efficient IDs. Major LLMs like GitHub, Anthropic
 - [x] Get token files for a bunch of LLMs
 - [x] Build LLM-specific id functions 
 - [ ] write a ~notebook to choose our custom vocabulary (optimize for low-overlap, no spaces if possible, etc)
-- [ ] Find tokens that have high overlap
-- [ ] generally support the notion of vocabularies / while keeping the main package small.
+- [x] Find tokens that have high overlap
+- [x] generally support the notion of vocabularies / while keeping the main package small.
 - [x] write an entropy estimator
 - [ ] Write a general / recommended id function, which compresses well everywhere
 - [x] Test 1000 ids against OpenRouter APIs to find tokenization counts
@@ -18,6 +18,7 @@ This repository generates token-efficient IDs. Major LLMs like GitHub, Anthropic
 - [ ] call it "languid"? that's pretty cute. langid also ok
 - [ ] publish npm package
 - [ ] finalize an API shape
+- [ ] is markov better?
 
 # Warning
 BPE tokenizers do not guarantee the best tokenization of a given sequence. Instead, they apply merges in a learned order, which can increase total token count. For example, the string " Godscı", created from the tokens [" Gods", "cı"], actually tokenizes into three tokens [" God", "sc", "ı"] because the "sc" merge has higher priority and is applied first, preventing the " Gods" merge.
