@@ -1,9 +1,9 @@
 #!/usr/bin/env npx tsx
 
-import { measureEfficiency } from '../efficiency.js';
-import { estimateTokenIdEntropy } from '../entropy.js';
+import { measureEfficiency } from './efficiency.js';
+import { estimateTokenIdEntropy } from './entropy.js';
 import { customTokenId } from '../src/generator.js';
-import { buildVocabularyFromWeighted } from '../src/vocabulary.js';
+import { buildVocabularyFromWeighted } from './lib/vocabulary.js';
 
 // Filter: only lowercase ASCII letters
 const lowercaseOnly = (token: string): boolean => {

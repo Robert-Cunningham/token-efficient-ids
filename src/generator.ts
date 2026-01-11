@@ -1,6 +1,6 @@
 import { webcrypto as crypto } from 'node:crypto';
 import { createAllowFilter, type AllowOptions } from './filter.js';
-import { loadTokens } from './tokenizers.js';
+import { gpt4o } from './dictionaries/index.js';
 
 // Pool-based random generation (like nanoid) to minimize crypto syscalls
 const POOL_SIZE_MULTIPLIER = 128;
@@ -92,8 +92,8 @@ export function customRandom(options: GeneratorOptions = {}) {
     tokenFilter = createAllowFilter(options.allow);
   }
 
-  // Load tokens from model or use custom vocabulary
-  let tokens = options.tokens ?? loadTokens('gpt-4o');
+  // Use custom vocabulary or default gpt-4o dictionary
+  let tokens = options.tokens ?? gpt4o;
   if (tokenFilter) {
     tokens = tokens.filter(tokenFilter);
   }
@@ -165,7 +165,7 @@ let defaultGenerator: ((size?: number) => string) | null = null;
  */
 export function tokenId(size = 4): string {
   if (!defaultGenerator) {
-    defaultGenerator = customTokenId({ tokens: loadTokens('gpt-4o') });
+    defaultGenerator = customTokenId({ tokens: gpt4o });
   }
   return defaultGenerator(size);
 }

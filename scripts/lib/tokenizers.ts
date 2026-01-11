@@ -115,9 +115,8 @@ const tokenizerCache = new Map<ModelId, string[]>();
  * Get the path to a tokenizer file
  */
 function getTokenizerPath(model: ModelId): string {
-  // In development, tokenizers are relative to src
-  // In production (dist), they're relative to dist
-  const tokenizerDir = path.resolve(__dirname, '..', 'tokenizers');
+  // Tokenizers are at root level, two directories up from scripts/lib/
+  const tokenizerDir = path.resolve(__dirname, '..', '..', 'tokenizers');
   return path.join(tokenizerDir, `${model}.json`);
 }
 
