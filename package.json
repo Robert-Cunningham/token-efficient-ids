@@ -53,5 +53,8 @@
     "tinybench": "^6.0.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "gpt-tokenizer": "^3.4.0"
   }
 }
