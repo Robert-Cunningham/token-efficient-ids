@@ -16,6 +16,11 @@
       "types": "./dist/non-secure.d.ts",
       "import": "./dist/non-secure.js",
       "require": "./dist/non-secure.cjs"
+    },
+    "./dictionaries": {
+      "types": "./dist/dictionaries.d.ts",
+      "import": "./dist/dictionaries.js",
+      "require": "./dist/dictionaries.cjs"
     }
   },
   "files": [
@@ -23,7 +28,8 @@
     "tokenizers"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "pnpm build:dictionaries && tsup",
+    "build:dictionaries": "tsx scripts/build-dictionaries.ts",
     "dev": "tsup --watch",
     "download": "bash scripts/download-tokenizers.sh",
     "benchmark": "tsx benchmark.ts",

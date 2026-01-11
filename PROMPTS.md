@@ -48,9 +48,9 @@ Can you please make the id generator object configurable, so that it accepts the
 is there a way to check for all punctuation (also in ascii), not just a few that you named? like some punctuation regex
 
 7.
-Can you please write a buildVocabulary function, which accepts a filter, a list of tokenizer vocabularies, and an output vobulary size? It should then basically take the N most common tokens 
+Can you please write a buildVocabulary function, which accepts a filter, a list of tokenizer vocabularies, and an output vobulary size N? It should then basically take N tokens filtered by the filter and then ordered by most appearances in the vocabulary sizes (if a token appears in volcabulary V with score W, increments its score by W, then select the N tokens with the highest scores).
 
-, and some result weights, and runs an optimization process? The results to optimize are {entropy per byte}
+Please produce a Vocabulary object which can be passed to the id generator config, or the entropy analyzer, etc. It should probably just be Vocabulary {tokens: string[]} for now. And it should expose a method sample() which samples one token.
 
 8.
 is there an efficient way to calculate the entropy of N randomly selected then joined tokens from a BPE encoder vocabulary with K total tokens? I need a way to estimate the true entropy of an id formed by concatenating N tokens from a BPE vocabulary in a tokenizer.json file.
@@ -58,3 +58,9 @@ is there an efficient way to calculate the entropy of N randomly selected then j
 Excellent. Can you please write me a ts function which maps (count: number, tokens: string[]) to an estimate of the entropy of "".join(_.times(count, () => _.sample(tokens)))? And write an excellent docstring that explains the purpose, the math, etc., as necessary.
 
 Can you please mathematically compute the entropy of vocab = [a, aa, aaa, aaaa, aaaaa], count = 7? I will use it to test your work
+
+9. 
+Can you please help me move this package to the following API shape?
+
+10.
+Can you please write a ts script, which takes a few special vocabularies from the tokenizer files, parses them into tokens, and then writes those tokens into ts files that are just arrays from tokens in e.g. dictionaries/gpt-5.ts? so the dictionaries files would be built at a build step from the tokenizer.json files.

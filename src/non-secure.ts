@@ -1,4 +1,5 @@
-import { loadTokens, type ModelId } from './tokenizers.js';
+// Token-Efficient IDs (Non-Secure)
+// Uses Math.random() - faster but not cryptographically secure
 
 /**
  * Non-secure random byte generator using Math.random().
@@ -32,71 +33,65 @@ function selectToken(
   return tokens[value];
 }
 
-export interface GeneratorOptions {
-  /** Model tokenizer to use (default: 'gpt-4o') */
-  model?: ModelId;
-  /** Number of tokens in generated ID (default: 4) */
-  size?: number;
+export interface InitOptions {
+  /** Vocabulary to use for ID generation */
+  vocabulary: string[];
+  /** Number of tokens per generated ID (default: 4) */
+  count?: number;
 }
 
 /**
- * Create a custom non-secure ID generator.
+ * Initialize a non-secure ID generator with the given options.
+ * Uses Math.random() - faster but not cryptographically secure.
  *
  * @example
  * ```ts
- * const claudeId = customTokenId({ model: 'claude' })
- * claudeId() // Uses Claude tokenizer, Math.random()
+ * import { init } from 'token-efficient-ids/non-secure'
+ * import { lowercaseStandard } from 'token-efficient-ids/dictionaries'
+ *
+ * const generateId = init({
+ *   vocabulary: lowercaseStandard,
+ *   count: 4
+ * })
+ *
+ * generateId() // => "foobar123xyz"
  * ```
  */
-export function customTokenId(options: GeneratorOptions = {}) {
-  const model = options.model ?? 'gpt-4o';
-  const defaultSize = options.size ?? 4;
+export function init(options: InitOptions): () => string {
+  const { vocabulary, count = 4 } = options;
 
-  const tokens = loadTokens(model);
+  // Filter out empty strings
+  const tokens = vocabulary.filter((t) => t.length > 0);
+  if (tokens.length === 0) {
+    throw new Error('Vocabulary must contain at least one non-empty token');
+  }
+
   const bitsPerToken = Math.ceil(Math.log2(tokens.length));
   const bytesPerToken = Math.ceil(bitsPerToken / 8);
   const mask = (1 << bitsPerToken) - 1;
-  const step = Math.ceil((1.6 * bytesPerToken * defaultSize) / 0.8);
 
-  return (size = defaultSize): string => {
-    let id = '';
+  // Redundancy factor for rejection sampling
+  const step = Math.ceil((1.6 * bytesPerToken * count) / 0.8);
+
+  return (): string => {
+    const parts: string[] = [];
     let selected = 0;
 
-    while (selected < size) {
+    while (selected < count) {
       const bytes = random(step);
       let offset = 0;
 
-      while (offset + bytesPerToken <= bytes.length && selected < size) {
+      while (offset + bytesPerToken <= bytes.length && selected < count) {
         const token = selectToken(tokens, bytes, offset, bytesPerToken, mask);
         offset += bytesPerToken;
 
         if (token !== null) {
-          id += token;
+          parts.push(token);
           selected++;
         }
       }
     }
 
-    return id;
+    return parts.join('');
   };
-}
-
-let defaultGenerator: ((size?: number) => string) | null = null;
-
-/**
- * Generate a token-efficient ID using Math.random().
- *
- * Faster than the secure version but not suitable for security-sensitive applications.
- *
- * @example
- * ```ts
- * tokenId()     // 4 tokens, ~70 bits
- * tokenId(7)    // 7 tokens, ~123 bits
- * ```
- */
-export function tokenId(size = 4): string {
-  if (!defaultGenerator) {
-    defaultGenerator = customTokenId({ model: 'gpt-4o' });
-  }
-  return defaultGenerator(size);
 }
