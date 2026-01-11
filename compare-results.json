@@ -1,77 +1,98 @@
 {
-  "tokenId(8)": {
-    "entropyBits": 131.01368552925857,
+  "token(8)": {
+    "entropyBits": 131.05053687538262,
     "tokensPerId": {
-      "openai/gpt-5-nano": 9.418,
-      "anthropic/claude-haiku-4.5": 19.796,
-      "google/gemini-3-flash-preview": 12.918
+      "openai/gpt-5-nano": 9.406,
+      "anthropic/claude-haiku-4.5": 19.989,
+      "google/gemini-3-flash-preview": 12.968,
+      "deepseek/deepseek-v3.2": 14.667
     },
-    "bytesPerId": 46.946,
-    "charsPerId": 35.437,
+    "bytesPerId": 47.3,
+    "charsPerId": 35.775,
     "examples": [
-      "edefunalि�abeeرفض公开视频ениетоvap",
-      "ړیوال/sw_duplicatesanganainkan.fromданReturned",
-      "人体ந்துගstof带一路_PASSWORDranaіі"
+      "ershipitate机械.count.Productsடுத்துprototypeouting",
+      "(unittest새注意unod-zero.asmKortтенсив",
+      "okralick遵.REGctureVeryedidoediakan"
     ]
   },
-  "lowercase-token-3k(8)": {
-    "entropyBits": 131.08451862615954,
+  "lowercase-token(8)": {
+    "entropyBits": 137.53321646548554,
     "tokensPerId": {
-      "openai/gpt-5-nano": 10.293,
-      "anthropic/claude-haiku-4.5": 15.388,
-      "google/gemini-3-flash-preview": 10.41
+      "openai/gpt-5-nano": 11.741,
+      "anthropic/claude-haiku-4.5": 19.411,
+      "google/gemini-3-flash-preview": 12.194,
+      "deepseek/deepseek-v3.2": 14.331
     },
-    "bytesPerId": 39.064,
-    "charsPerId": 39.064,
+    "bytesPerId": 54.217,
+    "charsPerId": 54.217,
     "examples": [
-      "isecondextendedrocuvrequiringfusiongiveabr",
-      "ampleictureromvanahavevatledoper",
-      "linuxoxyarmanbookmarkqualvariantobraipay"
+      " wenigstens undertakeetchuiden nona parallelogramcsp swirling",
+      "loggen walio scrub proiect dezen arquivos incontournablerowG",
+      "BuckRequestBody scrut pojed interf esclusivamente lover Petroleum"
+    ]
+  },
+  "openai-lowercase-token(8)": {
+    "entropyBits": 133.7525852908829,
+    "tokensPerId": {
+      "openai/gpt-5-nano": 9.442,
+      "anthropic/claude-haiku-4.5": 18.228,
+      "google/gemini-3-flash-preview": 11.044,
+      "deepseek/deepseek-v3.2": 13.452
+    },
+    "bytesPerId": 52.772,
+    "charsPerId": 52.772,
+    "examples": [
+      " Alice Vos geredenicular QObjectquipment arguedillaume",
+      " culturally bans gihe kompat Baja tilauctions Dru",
+      " zoektInstrument\tcomponent\tcontainer nws Fass depl allergy"
+    ]
+  },
+  "openai-no-spaces(8)": {
+    "entropyBits": 121.80911321077117,
+    "tokensPerId": {
+      "openai/gpt-5-nano": 10.045,
+      "anthropic/claude-haiku-4.5": 17.932,
+      "google/gemini-3-flash-preview": 11.847,
+      "deepseek/deepseek-v3.2": 13.447
+    },
+    "bytesPerId": 40.821,
+    "charsPerId": 40.821,
+    "examples": [
+      "upewwwloamapperunicipITOocularhle",
+      "idiousValidityamanaofuiebiemongooseTipsanse",
+      "elangentukancidentinsenganteFonteocoderented"
     ]
   },
   "nanoid()": {
     "entropyBits": 126,
     "tokensPerId": {
-      "openai/gpt-5-nano": 15.404,
-      "anthropic/claude-haiku-4.5": 19.289,
-      "google/gemini-3-flash-preview": 16.002
+      "openai/gpt-5-nano": 15.416,
+      "anthropic/claude-haiku-4.5": 19.378,
+      "google/gemini-3-flash-preview": 15.952,
+      "deepseek/deepseek-v3.2": 15.819
     },
     "bytesPerId": 21.999,
     "charsPerId": 21.999,
     "examples": [
-      "zSwt34nEC0vzuC_BMwsPS",
-      "H6DCJx7NvecrA4h646OyS",
-      "SEW_4OtU7vex17_PCR0d_"
+      "aq5IjfGVNz8UyvoF1CMFv",
+      "TVBBKcwcNCtpvu-FWE667",
+      "pCiQRH8TqCRNB5Xr5uNsx"
     ]
   },
-  "crypto.randomUUID()": {
-    "entropyBits": 122,
+  "random-bigint": {
+    "entropyBits": 128,
     "tokensPerId": {
-      "openai/gpt-5-nano": 23.795,
-      "anthropic/claude-haiku-4.5": 25.199,
-      "google/gemini-3-flash-preview": 33.808
+      "openai/gpt-5-nano": 14.004,
+      "anthropic/claude-haiku-4.5": 14.003,
+      "google/gemini-3-flash-preview": 39.688,
+      "deepseek/deepseek-v3.2": 14.003
     },
-    "bytesPerId": 36.999,
-    "charsPerId": 36.999,
+    "bytesPerId": 39.689,
+    "charsPerId": 39.689,
     "examples": [
-      "52430bc7-2757-4eee-a9c4-85a0b85f6e4a",
-      "9bb31ddf-929f-4e23-bd8b-2d55b3543e33",
-      "3f68731b-ab2f-4305-9b76-dbc850106469"
-    ]
-  },
-  "markov(37)": {
-    "entropyBits": 121.65163336087744,
-    "tokensPerId": {
-      "openai/gpt-5-nano": 14.325,
-      "anthropic/claude-haiku-4.5": 15.932,
-      "google/gemini-3-flash-preview": 14.09
-    },
-    "bytesPerId": 37.999,
-    "charsPerId": 37.999,
-    "examples": [
-      "ecthaserisorventhetonfoucotiferopalli",
-      "ilanfaldyeweadsedoprareentaneatrnthey",
-      "oudadiendelarthatrysictarsiovesyoruby"
+      "38932953059068464960594158738773101913",
+      "79453400949930587881137387887578543617",
+      "127786769752783543186481208206835750049"
     ]
   }
 }

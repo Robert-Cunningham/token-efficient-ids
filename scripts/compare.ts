@@ -2,24 +2,36 @@
 
 import { nanoid } from 'nanoid';
 import fs from 'node:fs';
-import { ENTROPY_PER_CHAR, markovId } from '../markov/index.js';
 import { gpt4o } from '../src/dictionaries/index.js';
+import { createAllowFilter } from '../src/filter.js';
 import { tokenId } from '../src/generator.js';
 import { init } from '../src/index.js';
 import { measureEfficiency } from './lib/efficiency.js';
 import { estimateTokenIdEntropy } from './lib/entropy.js';
 import { buildVocabularyFromWeighted } from './lib/vocabulary.js';
 
-// Nanoid uses this alphabet (64 chars)
-const NANOID_ALPHABET = 'useandom-26T198televarModernizingprobt_cHSwjkBNYDQbLxIKfOFGZPfWURVJXACE';
+// Pre-build vocabularies so they can be used in both generator and entropy calculation
+const lowercaseVocab = buildVocabularyFromWeighted(
+  createAllowFilter({unicode: false, punctuation: false }),
+  [{ model: 'gpt-4o', weight: 1 }, { model: 'claude', weight: 1}, {model: 'deepseek-v3', weight: 1}, {model: 'llama-4', weight: 1 }, {model: 'qwen-3', weight: 1}],
+  1000000000
+);
 
-const lowercaseOnly = (token: string): boolean => {
-  for (const char of token) {
-    const code = char.charCodeAt(0);
-    if (code < 97 || code > 122) return false; // 'a' = 97, 'z' = 122
-  }
-  return true;
-};
+const openaiLowercase = buildVocabularyFromWeighted(
+  createAllowFilter({unicode: false, punctuation: false }),
+  [{ model: 'gpt-4o', weight: 1 }],
+  1000000000
+);
+
+const openaiNoSpaces = buildVocabularyFromWeighted(
+  createAllowFilter({unicode: false, punctuation: false, whitespace: false }),
+  [{ model: 'gpt-4o', weight: 1 }],
+  1000000000
+);
+
+// console.log(lowercaseVocab.slice(1000, 1010));
+
+// process.exit(0);
 
 interface IDSource {
   name: string;
@@ -29,14 +41,24 @@ interface IDSource {
 
 const ID_SOURCES: IDSource[] = [
   {
-    name: 'tokenId(8)',
+    name: 'token(8)',
     generator: () => tokenId(8),
     computeEntropy: () => estimateTokenIdEntropy(8, gpt4o, { samples: 3000 }),
   },
   {
-    name: 'lowercase-token-3k(8)',
-    generator: init({ vocabulary: buildVocabularyFromWeighted(lowercaseOnly, [{ model: 'gpt-4o', weight: 1 }, { model: 'claude', weight: 1 }], 10_000), count: 8 }),
-    computeEntropy: () => estimateTokenIdEntropy(8, gpt4o, { samples: 3000 }),
+    name: 'lowercase-token(8)',
+    generator: init({ vocabulary: lowercaseVocab, count: 8 }),
+    computeEntropy: () => estimateTokenIdEntropy(8, lowercaseVocab, { samples: 3000 }),
+  },
+  {
+    name: 'openai-lowercase-token(8)',
+    generator: init({ vocabulary: openaiLowercase, count: 8 }),
+    computeEntropy: () => estimateTokenIdEntropy(8, openaiLowercase, { samples: 3000 }),
+  },
+  {
+    name: 'openai-no-spaces(8)',
+    generator: init({ vocabulary: openaiNoSpaces, count: 8 }),
+    computeEntropy: () => estimateTokenIdEntropy(8, openaiNoSpaces, { samples: 3000 }),
   },
   {
     name: 'nanoid()',
@@ -45,6 +67,19 @@ const ID_SOURCES: IDSource[] = [
     // No collisions possible since each char is independent
     computeEntropy: () => 21 * Math.log2(64),
   },
+  {
+    name: 'random-bigint',
+    generator: () => {
+      const bytes = new Uint8Array(16); // 128 bits
+      crypto.getRandomValues(bytes);
+      let n = 0n;
+      for (const b of bytes) n = (n << 8n) | BigInt(b);
+      return n.toString();
+    },
+    // 128 bits of entropy, represented as decimal digits
+    computeEntropy: () => 128,
+  },
+  /*
   {
     name: 'crypto.randomUUID()',
     generator: () => crypto.randomUUID(),
@@ -56,6 +91,7 @@ const ID_SOURCES: IDSource[] = [
     generator: () => markovId(37),
     computeEntropy: () => ENTROPY_PER_CHAR * 37,
   },
+  */
 ];
 
 const ID_COUNT = 1_000;
@@ -64,6 +100,7 @@ const OPENROUTER_MODELS = [
   'openai/gpt-5-nano',
   'anthropic/claude-haiku-4.5',
   'google/gemini-3-flash-preview',
+  'deepseek/deepseek-v3.2',
 ];
 
 interface SourceResult {
