@@ -1,6 +1,6 @@
 import { webcrypto as crypto } from 'node:crypto';
-import { loadTokens, type ModelId } from './tokenizers.js';
 import { createAllowFilter, type AllowOptions } from './filter.js';
+import { loadTokens } from './tokenizers.js';
 
 // Pool-based random generation (like nanoid) to minimize crypto syscalls
 const POOL_SIZE_MULTIPLIER = 128;
@@ -51,8 +51,8 @@ function selectToken(
 }
 
 export interface GeneratorOptions {
-  /** Model tokenizer to use (default: 'gpt-4o') */
-  model?: ModelId;
+  /** Custom vocabulary to use (overrides model) */
+  tokens?: string[];
   /** Number of tokens in generated ID (default: 4) */
   size?: number;
   /** Custom random byte generator */
@@ -80,7 +80,6 @@ export interface GeneratorOptions {
  * ```
  */
 export function customRandom(options: GeneratorOptions = {}) {
-  const model = options.model ?? 'gpt-4o';
   const defaultSize = options.count ?? options.size ?? 4;
   const getRandom = options.random ?? random;
   const delimiter = options.delimiter ?? '';
@@ -93,13 +92,15 @@ export function customRandom(options: GeneratorOptions = {}) {
     tokenFilter = createAllowFilter(options.allow);
   }
 
-  // Load and optionally filter tokens
-  let tokens = loadTokens(model);
+  // Load tokens from model or use custom vocabulary
+  let tokens = options.tokens ?? loadTokens('gpt-4o');
   if (tokenFilter) {
     tokens = tokens.filter(tokenFilter);
-    if (tokens.length === 0) {
-      throw new Error('No tokens remaining after applying filter');
-    }
+  }
+  // Filter out empty strings
+  tokens = tokens.filter((t) => t.length > 0);
+  if (tokens.length === 0) {
+    throw new Error('No tokens remaining after applying filter');
   }
 
   const bitsPerToken = Math.ceil(Math.log2(tokens.length));
@@ -164,7 +165,7 @@ let defaultGenerator: ((size?: number) => string) | null = null;
  */
 export function tokenId(size = 4): string {
   if (!defaultGenerator) {
-    defaultGenerator = customTokenId({ model: 'gpt-4o' });
+    defaultGenerator = customTokenId({ tokens: loadTokens('gpt-4o') });
   }
   return defaultGenerator(size);
 }
