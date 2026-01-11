@@ -1,12 +1,7 @@
 #!/usr/bin/env npx tsx
 
-import crypto from 'node:crypto';
-import fs from 'node:fs';
-import { customTokenId, tokenId } from '../../src/generator.js';
 
 // For comparison
-import { nanoid } from 'nanoid';
-import { ENTROPY_PER_CHAR, markovId } from '../../markov/index.js';
 
 interface TokenUsage {
   prompt_tokens: number;
@@ -83,7 +78,7 @@ export async function measureEfficiency(
 ): Promise<Metrics> {
   const ids = generateIds(generator, idCount);
   const content = ids.join('\n');
-  const totalBytes = textEncoder.encode(content).length;
+  const totalBytes = await countBytes(content);
   const totalChars = [...content].length;
 
   const totalTokens = await measureTokens(content, model);
@@ -95,3 +90,6 @@ export async function measureEfficiency(
   };
 }
 
+export async function countBytes(content: string): Promise<number> {
+  return textEncoder.encode(content).length;
+}

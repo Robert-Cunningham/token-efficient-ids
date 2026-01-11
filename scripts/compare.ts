@@ -1,0 +1,154 @@
+#!/usr/bin/env npx tsx
+
+import { nanoid } from 'nanoid';
+import fs from 'node:fs';
+import { ENTROPY_PER_CHAR, markovId } from '../markov/index.js';
+import { gpt4o } from '../src/dictionaries/index.js';
+import { tokenId } from '../src/generator.js';
+import { init } from '../src/index.js';
+import { measureEfficiency } from './lib/efficiency.js';
+import { estimateTokenIdEntropy } from './lib/entropy.js';
+import { buildVocabularyFromWeighted } from './lib/vocabulary.js';
+
+// Nanoid uses this alphabet (64 chars)
+const NANOID_ALPHABET = 'useandom-26T198televarModernizingprobt_cHSwjkBNYDQbLxIKfOFGZPfWURVJXACE';
+
+const lowercaseOnly = (token: string): boolean => {
+  for (const char of token) {
+    const code = char.charCodeAt(0);
+    if (code < 97 || code > 122) return false; // 'a' = 97, 'z' = 122
+  }
+  return true;
+};
+
+interface IDSource {
+  name: string;
+  generator: () => string;
+  computeEntropy: () => number;
+}
+
+const ID_SOURCES: IDSource[] = [
+  {
+    name: 'tokenId(8)',
+    generator: () => tokenId(8),
+    computeEntropy: () => estimateTokenIdEntropy(8, gpt4o, { samples: 3000 }),
+  },
+  {
+    name: 'lowercase-token-3k(8)',
+    generator: init({ vocabulary: buildVocabularyFromWeighted(lowercaseOnly, [{ model: 'gpt-4o', weight: 1 }, { model: 'claude', weight: 1 }], 10_000), count: 8 }),
+    computeEntropy: () => estimateTokenIdEntropy(8, gpt4o, { samples: 3000 }),
+  },
+  {
+    name: 'nanoid()',
+    generator: () => nanoid(),
+    // nanoid(21) uses 64-char alphabet, 21 chars = 21 * log2(64) = 126 bits
+    // No collisions possible since each char is independent
+    computeEntropy: () => 21 * Math.log2(64),
+  },
+  {
+    name: 'crypto.randomUUID()',
+    generator: () => crypto.randomUUID(),
+    // UUID v4 has 122 bits of randomness (128 - 6 version/variant bits)
+    computeEntropy: () => 122,
+  },
+  {
+    name: 'markov(37)',
+    generator: () => markovId(37),
+    computeEntropy: () => ENTROPY_PER_CHAR * 37,
+  },
+];
+
+const ID_COUNT = 1_000;
+
+const OPENROUTER_MODELS = [
+  'openai/gpt-5-nano',
+  'anthropic/claude-haiku-4.5',
+  'google/gemini-3-flash-preview',
+];
+
+interface SourceResult {
+  entropyBits: number;
+  tokensPerId: Record<string, number>;
+  bytesPerId: number;
+  charsPerId: number;
+  examples: string[];
+}
+
+type Results = Record<string, SourceResult>;
+
+async function runBenchmark(): Promise<Results> {
+  const results: Results = {};
+
+  // First, compute entropy and generate examples for each source
+  console.error('Computing entropy for each source...');
+  for (const source of ID_SOURCES) {
+    console.error(`  ${source.name}...`);
+    const entropy = source.computeEntropy();
+    const examples = [source.generator(), source.generator(), source.generator()];
+    results[source.name] = {
+      entropyBits: entropy,
+      tokensPerId: {},
+      bytesPerId: 0,
+      charsPerId: 0,
+      examples,
+    };
+    console.error(`    ${entropy.toFixed(2)} bits`);
+  }
+
+  // Build all test tasks
+  const tasks = OPENROUTER_MODELS.flatMap((model) =>
+    ID_SOURCES.map((source) => ({ model, source }))
+  );
+
+  // Run all efficiency measurements in parallel
+  console.error(`\nRunning ${tasks.length} efficiency measurements in parallel...`);
+  const measurements = await Promise.all(
+    tasks.map(async ({ model, source }) => {
+      const metrics = await measureEfficiency(model, ID_COUNT, source.generator);
+      const entropyBits = results[source.name].entropyBits;
+      const bitsPerToken = entropyBits / metrics.avgTokensPerID;
+      console.error(`  ${model} / ${source.name}: ${metrics.avgTokensPerID.toFixed(2)} tokens/ID (${bitsPerToken.toFixed(1)} bits/token)`);
+      return {
+        model,
+        sourceName: source.name,
+        metrics,
+      };
+    })
+  );
+
+  // Populate results from measurements
+  for (const { model, sourceName, metrics } of measurements) {
+    results[sourceName].tokensPerId[model] = metrics.avgTokensPerID;
+    // bytes/chars are the same across models, just use the last one
+    results[sourceName].bytesPerId = metrics.avgBytesPerID;
+    results[sourceName].charsPerId = metrics.avgCharsPerID;
+  }
+
+  return results;
+}
+
+runBenchmark()
+  .then((results) => {
+    const output = JSON.stringify(results, null, 2);
+    const outputPath = 'compare-results.json';
+    fs.writeFileSync(outputPath, output);
+    console.error(`\nResults written to ${outputPath}`);
+
+    // Print summary table
+    console.log('\n=== Summary ===\n');
+    console.log('Source               | Entropy | Avg Tokens | Bits/Token | Chars');
+    console.log('---------------------|---------|------------|------------|------');
+    for (const [name, data] of Object.entries(results)) {
+      const tokenCounts = Object.values(data.tokensPerId);
+      const avgTokens = tokenCounts.reduce((sum, t) => sum + t, 0) / tokenCounts.length;
+      const bitsPerToken = data.entropyBits / avgTokens;
+      console.log(
+        `${name.padEnd(20)} | ${data.entropyBits.toFixed(0).padStart(7)} | ${avgTokens.toFixed(2).padStart(10)} | ${bitsPerToken.toFixed(1).padStart(10)} | ${data.charsPerId.toFixed(0).padStart(5)}`
+      );
+      console.log(`  examples: ${data.examples.join(', ')}`);
+    }
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    process.exit(1);
+  });

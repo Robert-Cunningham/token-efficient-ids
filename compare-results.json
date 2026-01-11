@@ -1,0 +1,77 @@
+{
+  "tokenId(8)": {
+    "entropyBits": 131.01368552925857,
+    "tokensPerId": {
+      "openai/gpt-5-nano": 9.418,
+      "anthropic/claude-haiku-4.5": 19.796,
+      "google/gemini-3-flash-preview": 12.918
+    },
+    "bytesPerId": 46.946,
+    "charsPerId": 35.437,
+    "examples": [
+      "edefunalि�abeeرفض公开视频ениетоvap",
+      "ړیوال/sw_duplicatesanganainkan.fromданReturned",
+      "人体ந்துගstof带一路_PASSWORDranaіі"
+    ]
+  },
+  "lowercase-token-3k(8)": {
+    "entropyBits": 131.08451862615954,
+    "tokensPerId": {
+      "openai/gpt-5-nano": 10.293,
+      "anthropic/claude-haiku-4.5": 15.388,
+      "google/gemini-3-flash-preview": 10.41
+    },
+    "bytesPerId": 39.064,
+    "charsPerId": 39.064,
+    "examples": [
+      "isecondextendedrocuvrequiringfusiongiveabr",
+      "ampleictureromvanahavevatledoper",
+      "linuxoxyarmanbookmarkqualvariantobraipay"
+    ]
+  },
+  "nanoid()": {
+    "entropyBits": 126,
+    "tokensPerId": {
+      "openai/gpt-5-nano": 15.404,
+      "anthropic/claude-haiku-4.5": 19.289,
+      "google/gemini-3-flash-preview": 16.002
+    },
+    "bytesPerId": 21.999,
+    "charsPerId": 21.999,
+    "examples": [
+      "zSwt34nEC0vzuC_BMwsPS",
+      "H6DCJx7NvecrA4h646OyS",
+      "SEW_4OtU7vex17_PCR0d_"
+    ]
+  },
+  "crypto.randomUUID()": {
+    "entropyBits": 122,
+    "tokensPerId": {
+      "openai/gpt-5-nano": 23.795,
+      "anthropic/claude-haiku-4.5": 25.199,
+      "google/gemini-3-flash-preview": 33.808
+    },
+    "bytesPerId": 36.999,
+    "charsPerId": 36.999,
+    "examples": [
+      "52430bc7-2757-4eee-a9c4-85a0b85f6e4a",
+      "9bb31ddf-929f-4e23-bd8b-2d55b3543e33",
+      "3f68731b-ab2f-4305-9b76-dbc850106469"
+    ]
+  },
+  "markov(37)": {
+    "entropyBits": 121.65163336087744,
+    "tokensPerId": {
+      "openai/gpt-5-nano": 14.325,
+      "anthropic/claude-haiku-4.5": 15.932,
+      "google/gemini-3-flash-preview": 14.09
+    },
+    "bytesPerId": 37.999,
+    "charsPerId": 37.999,
+    "examples": [
+      "ecthaserisorventhetonfoucotiferopalli",
+      "ilanfaldyeweadsedoprareentaneatrnthey",
+      "oudadiendelarthatrysictarsiovesyoruby"
+    ]
+  }
+}
