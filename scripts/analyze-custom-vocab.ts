@@ -1,8 +1,8 @@
 #!/usr/bin/env npx tsx
 
-import { measureEfficiency } from './efficiency.js';
-import { estimateTokenIdEntropy } from './entropy.js';
 import { customTokenId } from '../src/generator.js';
+import { measureEfficiency } from './lib/efficiency.js';
+import { estimateTokenIdEntropy } from './lib/entropy.js';
 import { buildVocabularyFromWeighted } from './lib/vocabulary.js';
 
 // Filter: only lowercase ASCII letters

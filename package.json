@@ -34,6 +34,7 @@
     "download": "bash scripts/download-tokenizers.sh",
     "benchmark": "tsx benchmark.ts",
     "efficiency": "tsx --env-file=.env scripts/efficiency.ts",
+    "compare": "tsx --env-file=.env scripts/compare.ts",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts"
   },
