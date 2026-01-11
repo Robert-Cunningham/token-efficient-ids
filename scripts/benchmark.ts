@@ -3,8 +3,8 @@
 import crypto from 'node:crypto';
 import { Bench } from 'tinybench';
 
-import { customTokenId, tokenId } from './src/generator.js';
-import { customTokenId as nonSecureCustom, tokenId as nonSecureTokenId } from './src/non-secure.js';
+import { customTokenId, tokenId } from '../src/generator.js';
+import { customTokenId as nonSecureCustom, tokenId as nonSecureTokenId } from '../src/non-secure.js';
 
 // For comparison
 import { nanoid } from 'nanoid';

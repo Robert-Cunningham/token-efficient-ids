@@ -1,9 +1,8 @@
 #!/usr/bin/env npx tsx
 
 import crypto from 'node:crypto';
-import fs from 'node:fs';
 
-import { customTokenId, tokenId } from './src/generator.js';
+import { customTokenId, tokenId } from '../src/generator.js';
 
 // For comparison
 import { nanoid } from 'nanoid';
@@ -167,7 +166,7 @@ async function runBenchmark(): Promise<Results> {
   return results;
 }
 
-// Main
+/*
 runBenchmark()
   .then((results) => {
     const output = JSON.stringify(results, null, 2);
@@ -179,3 +178,5 @@ runBenchmark()
     console.error('Error:', error);
     process.exit(1);
   });
+}
+*/
