@@ -56,8 +56,8 @@
  *
  * ---
  * ## Notes / assumptions
- * - `tokens` must not contain the empty string `""` (that would create infinitely many
- *   segmentations by inserting empty tokens). This function throws if it finds one.
+ * - Empty strings `""` in `tokens` are automatically filtered out (they would create
+ *   infinitely many segmentations by inserting empty tokens).
  * - This estimates the entropy of the **raw concatenated JS string**. If you apply any
  *   normalization or encoding (lowercasing, Unicode normalization, URL encoding, etc.),
  *   do that consistently before counting, because it can change entropy substantially.
@@ -80,9 +80,9 @@ export function estimateTokenIdEntropy(
     throw new Error(`count must be a non-negative integer; got ${count}`);
   }
   if (!Array.isArray(tokens) || tokens.length === 0) return 0;
-  if (tokens.some((t) => t.length === 0)) {
-    throw new Error(`tokens must not contain the empty string "" (infinite collisions).`);
-  }
+  // Filter out empty strings (they would cause infinite collisions)
+  tokens = tokens.filter((t) => t.length > 0);
+  if (tokens.length === 0) return 0;
   if (!Number.isFinite(samples) || samples <= 0 || Math.floor(samples) !== samples) {
     throw new Error(`options.samples must be a positive integer; got ${samples}`);
   }
