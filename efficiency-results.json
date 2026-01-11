@@ -1,0 +1,134 @@
+{
+  "openai/gpt-5-nano": {
+    "tokenId()": {
+      "avgTokensPerID": 5.073,
+      "avgBytesPerID": 28.987,
+      "avgCharsPerID": 23.083,
+      "entropyBits": 70
+    },
+    "tokenId(7)": {
+      "avgTokensPerID": 8.218,
+      "avgBytesPerID": 50.483,
+      "avgCharsPerID": 39.73,
+      "entropyBits": 122
+    },
+    "claude tokenId": {
+      "avgTokensPerID": 6.204,
+      "avgBytesPerID": 26.514,
+      "avgCharsPerID": 25.881,
+      "entropyBits": 70
+    },
+    "llama-3 tokenId": {
+      "avgTokensPerID": 5.88,
+      "avgBytesPerID": 26.9,
+      "avgCharsPerID": 23.904,
+      "entropyBits": 70
+    },
+    "nanoid()": {
+      "avgTokensPerID": 15.325,
+      "avgBytesPerID": 21.999,
+      "avgCharsPerID": 21.999,
+      "entropyBits": 126
+    },
+    "nanoid(10)": {
+      "avgTokensPerID": 7.934,
+      "avgBytesPerID": 10.999,
+      "avgCharsPerID": 10.999,
+      "entropyBits": 60
+    },
+    "crypto.randomUUID()": {
+      "avgTokensPerID": 23.875,
+      "avgBytesPerID": 36.999,
+      "avgCharsPerID": 36.999,
+      "entropyBits": 122
+    }
+  },
+  "anthropic/claude-haiku-4.5": {
+    "tokenId()": {
+      "avgTokensPerID": 11.333,
+      "avgBytesPerID": 28.867,
+      "avgCharsPerID": 22.724,
+      "entropyBits": 70
+    },
+    "tokenId(7)": {
+      "avgTokensPerID": 18.592,
+      "avgBytesPerID": 49.403,
+      "avgCharsPerID": 39.438,
+      "entropyBits": 122
+    },
+    "claude tokenId": {
+      "avgTokensPerID": 9.413,
+      "avgBytesPerID": 26.235,
+      "avgCharsPerID": 25.693,
+      "entropyBits": 70
+    },
+    "llama-3 tokenId": {
+      "avgTokensPerID": 10.04,
+      "avgBytesPerID": 27.348,
+      "avgCharsPerID": 24.334,
+      "entropyBits": 70
+    },
+    "nanoid()": {
+      "avgTokensPerID": 19.397,
+      "avgBytesPerID": 21.999,
+      "avgCharsPerID": 21.999,
+      "entropyBits": 126
+    },
+    "nanoid(10)": {
+      "avgTokensPerID": 9.816,
+      "avgBytesPerID": 10.999,
+      "avgCharsPerID": 10.999,
+      "entropyBits": 60
+    },
+    "crypto.randomUUID()": {
+      "avgTokensPerID": 25.096,
+      "avgBytesPerID": 36.999,
+      "avgCharsPerID": 36.999,
+      "entropyBits": 122
+    }
+  },
+  "google/gemini-3-flash-preview": {
+    "tokenId()": {
+      "avgTokensPerID": 6.62,
+      "avgBytesPerID": 29.086,
+      "avgCharsPerID": 22.967,
+      "entropyBits": 70
+    },
+    "tokenId(7)": {
+      "avgTokensPerID": 10.896,
+      "avgBytesPerID": 49.834,
+      "avgCharsPerID": 39.717,
+      "entropyBits": 122
+    },
+    "claude tokenId": {
+      "avgTokensPerID": 6.258,
+      "avgBytesPerID": 26.521,
+      "avgCharsPerID": 26,
+      "entropyBits": 70
+    },
+    "llama-3 tokenId": {
+      "avgTokensPerID": 6.504,
+      "avgBytesPerID": 27.121,
+      "avgCharsPerID": 24.072,
+      "entropyBits": 70
+    },
+    "nanoid()": {
+      "avgTokensPerID": 15.913,
+      "avgBytesPerID": 21.999,
+      "avgCharsPerID": 21.999,
+      "entropyBits": 126
+    },
+    "nanoid(10)": {
+      "avgTokensPerID": 8.205,
+      "avgBytesPerID": 10.999,
+      "avgCharsPerID": 10.999,
+      "entropyBits": 60
+    },
+    "crypto.randomUUID()": {
+      "avgTokensPerID": 33.835,
+      "avgBytesPerID": 36.999,
+      "avgCharsPerID": 36.999,
+      "entropyBits": 122
+    }
+  }
+}

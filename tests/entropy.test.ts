@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import { estimateTokenIdEntropy } from '../entropy.js';
+import { estimateTokenIdEntropy } from '../scripts/entropy.js';
 
 describe('estimateTokenIdEntropy', () => {
   // Highly ambiguous vocabulary: [a, aa, aaa, aaaa, aaaaa]
