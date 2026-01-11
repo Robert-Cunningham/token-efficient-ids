@@ -3,6 +3,7 @@
 import { nanoid } from 'nanoid';
 import fs from 'node:fs';
 import { gpt4o } from '../src/dictionaries/index.js';
+import { estimateExactTokensEntropy, initExactTokens } from '../src/exact-tokens.js';
 import { createAllowFilter } from '../src/filter.js';
 import { tokenId } from '../src/generator.js';
 import { init } from '../src/index.js';
@@ -11,8 +12,8 @@ import { estimateTokenIdEntropy } from './lib/entropy.js';
 import { buildVocabularyFromWeighted } from './lib/vocabulary.js';
 
 // Pre-build vocabularies so they can be used in both generator and entropy calculation
-const lowercaseVocab = buildVocabularyFromWeighted(
-  createAllowFilter({unicode: false, punctuation: false }),
+const lowercaseMerged = buildVocabularyFromWeighted(
+  createAllowFilter({unicode: false, punctuation: false, uppercase: false, whitespace: false, numbers: false }),
   [{ model: 'gpt-4o', weight: 1 }, { model: 'claude', weight: 1}, {model: 'deepseek-v3', weight: 1}, {model: 'llama-4', weight: 1 }, {model: 'qwen-3', weight: 1}],
   1000000000
 );
@@ -28,6 +29,15 @@ const openaiNoSpaces = buildVocabularyFromWeighted(
   [{ model: 'gpt-4o', weight: 1 }],
   1000000000
 );
+
+/*
+console.time('exactly 8 tokens');
+const generator = initExactTokens({ vocabulary: lowercaseMerged, tokenCount: 8 });
+for (let i = 0; i < 100; i++) {
+  console.log('exactly 8 tokens', generator());
+}
+console.timeEnd('exactly 8 tokens');
+*/
 
 // console.log(lowercaseVocab.slice(1000, 1010));
 
@@ -47,9 +57,10 @@ const ID_SOURCES: IDSource[] = [
   },
   {
     name: 'lowercase-token(8)',
-    generator: init({ vocabulary: lowercaseVocab, count: 8 }),
-    computeEntropy: () => estimateTokenIdEntropy(8, lowercaseVocab, { samples: 3000 }),
+    generator: init({ vocabulary: lowercaseMerged, count: 8 }),
+    computeEntropy: () => estimateTokenIdEntropy(8, lowercaseMerged, { samples: 3000 }),
   },
+  /*
   {
     name: 'openai-lowercase-token(8)',
     generator: init({ vocabulary: openaiLowercase, count: 8 }),
@@ -59,6 +70,13 @@ const ID_SOURCES: IDSource[] = [
     name: 'openai-no-spaces(8)',
     generator: init({ vocabulary: openaiNoSpaces, count: 8 }),
     computeEntropy: () => estimateTokenIdEntropy(8, openaiNoSpaces, { samples: 3000 }),
+  },
+  */
+  {
+    name: 'exact-tokens(8)',
+    generator: initExactTokens({ vocabulary: lowercaseMerged, tokenCount: 8 }),
+    // Entropy adjusted for rejection sampling loss
+    computeEntropy: () => estimateExactTokensEntropy(lowercaseMerged, 8, 2000),
   },
   {
     name: 'nanoid()',
