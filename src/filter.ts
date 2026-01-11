@@ -22,7 +22,7 @@ const PUNCTUATION_REGEX = /\p{P}|\p{S}/u; // Unicode punctuation and symbols
 export function createAllowFilter(allow: AllowOptions): (token: string) => boolean {
   const {
     unicode = true,
-    whitespace = false,
+    whitespace = true,
     punctuation = true,
     numbers = true,
     uppercase = true,
