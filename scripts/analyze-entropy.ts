@@ -1,7 +1,7 @@
 #!/usr/bin/env npx tsx
 
-import { estimateTokenIdEntropy } from '../entropy.js';
-import { loadTokens } from '../src/tokenizers.js';
+import { estimateTokenIdEntropy } from './entropy.js';
+import { loadTokens } from './lib/tokenizers.js';
 
 // Load gpt-4o tokens (properly decoded, special tokens excluded)
 // Filter out empty strings which can occur from BPE decoding edge cases
